@@ -1,19 +1,22 @@
 import random
+import requests
 
-questions = {
-    "What is the key difference between a list and a tuple in Python?":"Lists are mutable, tuples are immutable.",
-    "Which of the following best describes list comprehensions in Python?":"A concise way to create lists based on existing iterables.",
-    "What is the purpose of the __init__ method in a Python class?":"To initialize object attributes",
-    "What is the difference between the == and is operators in Python?":"== checks for equality, is checks for identity.",
-    "What is the primary purpose of decorators in Python?":"To modify or extend the behavior of functions or classes.",
-    "What is the Global Interpreter Lock (GIL) in Python?":"A mutex that allows only one thread to execute Python bytecode at a time.",
-    "How do you handle exceptions in Python?":"Using try, except, finally, and else blocks.",
-    "What are lambda functions in Python?":"Anonymous, single-expression functions.",
-}
+QUESTION_COUNT = 10
+
+url = f"https://opentdb.com/api.php?amount={QUESTION_COUNT}"
+
+questions = {}
+r = requests.get(url)
+data = r.json()
+for result in data['results']:
+    question = result['question']
+    correct_answer = result['correct_answer']
+    questions[question] = correct_answer
 
 def python_trivia_game():
     questions_list = list(questions.keys())
-    total_questions = 5
+    custome_question = int(input("How many questions would you like to answer? "))
+    total_questions = custome_question or QUESTION_COUNT
     score = 0
 
     selected_questions = random.sample(questions_list, total_questions)
